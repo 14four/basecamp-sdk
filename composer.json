@@ -1,0 +1,35 @@
+{
+    "name": "14four/basecamp-sdk",
+    "description": "PHP SDK for Basecamp 3 api.",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "require-dev": {
+        "mockery/mockery": "^0.9.9",
+        "orchestra/testbench": "^3.4",
+        "phpunit/phpunit": "^5.0",
+        "illuminate/support": "^5.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Hagel",
+            "email": "josh@14four.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "FourteenFour\\Basecamp\\": "./src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FourteenFour\\Basecamp\\Test\\": "./tests/src/"
+        }
+    },
+    "scripts": {
+        "getsami": "curl -O http://get.sensiolabs.org/sami.phar",
+        "docs": "php sami.phar update sami.php"
+    }
+}
