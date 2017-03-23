@@ -4,7 +4,6 @@ namespace FourteenFour\Basecamp\Providers\v3;
 
 use FourteenFour\Basecamp\Contracts\BasecampsContract;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 
 class Basecamps implements BasecampsContract {
 
@@ -14,11 +13,13 @@ class Basecamps implements BasecampsContract {
 
     private $authToken;
 
-    public function __construct( $authToken, $accountId ) {
+    public function __construct( $authToken, $accountId, Client $client ) {
 
         $this->authToken = $authToken;
 
         $this->accountId = $accountId;
+
+        $this->client = $client;
 
     }
 
@@ -26,7 +27,7 @@ class Basecamps implements BasecampsContract {
 
         $this->accountId = $accountId;
 
-        return this;
+        return $this;
 
     }
 
@@ -34,17 +35,19 @@ class Basecamps implements BasecampsContract {
 
         $this->authToken = $authToken;
 
-        return this;
+        return $this;
 
     }
 
     public function page( $page = 0 ) {
 
-        return $this->request("/projects.json");
+        return $this->request("/projects.json?page=$page");
 
     }
 
     public function find( $id ) {
+
+        return $this->request("/projects/$id.json");
 
     }
 
@@ -60,23 +63,23 @@ class Basecamps implements BasecampsContract {
 
     }
 
+    private function getHeaders() {
+
+        return [
+            'headers' => [
+                'Authorization' => "Bearer $this->authToken",
+            ]
+        ];
+
+    }
+
     private function request( $path, $method = 'GET', $body = '' ) {
 
-        $client = new Client();
+        $response = $this->client->request($method, $this->accountId . $path, $this->getHeaders());
 
-        // $request = new Request($method, 'https://3.basecampapi.com/' . $this->accountId . $path, [
-        //     'Authorization' => "Bearer $this->authToken"
-        // ], json_encode($body), '1.1');
-        //
-        // $response = $client->send($request, ['verify' => false]);
-
-        $request = $client->request($method, 'https://3.basecampapi.com/' . $this->accountId . $path, ['verify' => true, 'debug' => true, 'curl' => [CURLOPT_SSL_VERIFYHOST => 2]]);
-
-        return json_decode($response->getBody());
-
-        // if ( !$this->checkResponse( $response ) ) {
-        //     // throw error
-        // }
+        if ( !$this->checkResponse( $response ) ) {
+            throw new \Exception('Bad Response from Basecamp');
+        }
 
         return json_decode($response->getBody());
 

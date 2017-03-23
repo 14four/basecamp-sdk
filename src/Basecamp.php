@@ -2,25 +2,53 @@
 
 namespace FourteenFour\Basecamp;
 
-
+use FourteenFour\Basecamp\Factories\RequestFactory;
+use FourteenFour\Basecamp\Providers\v3\Basecamps;
+use GuzzleHttp\Client;
 
 class Basecamp {
 
-    private $token;
+    private $authToken;
 
-    public function __construct( $token = null ) {
+    private $accountId;
 
-        $this->token = $token;
+    private $client;
+
+    public function __construct( $application = '', $authToken = null, $accountId = null ) {
+
+        $this->application = $application;
+
+        $this->authToken = $authToken;
+
+        $this->accountId = $accountId;
+
+        $this->client = RequestFactory::create( $application );
 
     }
 
-    public function basecamps( $token = null ) {
+    public function setAccount( $accountId ) {
 
-        if ( $token ) {
+        $this->accountId = $accountId;
 
+        return $this;
+
+    }
+
+    public function setToken( $authToken ) {
+
+        $this->tauthTken = $authToken;
+
+        return $this;
+
+    }
+
+    public function basecamps( $authToken = null ) {
+
+        if ( $authToken ) {
+            $this->authToken = $authToken;
         }
 
-        return new Basecamps( $this->token );
+        return new Basecamps( $this->authToken, $this->accountId, $this->client );
 
     }
 
