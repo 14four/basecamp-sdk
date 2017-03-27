@@ -3,52 +3,75 @@
 namespace FourteenFour\Basecamp;
 
 use FourteenFour\Basecamp\Factories\RequestFactory;
-use FourteenFour\Basecamp\Providers\v3\Basecamps;
+use FourteenFour\Basecamp\Providers\User;
+use FourteenFour\Basecamp\Providers\Basecamps;
 use GuzzleHttp\Client;
 
 class Basecamp {
 
-    private $authToken;
-
-    private $accountId;
+    private $options;
 
     private $client;
 
-    public function __construct( $application = '', $authToken = null, $accountId = null ) {
+    public function __construct( $application, $options = [] ) {
 
-        $this->application = $application;
-
-        $this->authToken = $authToken;
-
-        $this->accountId = $accountId;
+        $this->setOptions( $options );
 
         $this->client = RequestFactory::create( $application );
 
     }
 
-    public function setAccount( $accountId ) {
+    public function setOptions( $options ) {
 
-        $this->accountId = $accountId;
-
-        return $this;
-
-    }
-
-    public function setToken( $authToken ) {
-
-        $this->tauthTken = $authToken;
-
-        return $this;
-
-    }
-
-    public function basecamps( $authToken = null ) {
-
-        if ( $authToken ) {
-            $this->authToken = $authToken;
+        foreach( $options as $key => $value ) {
+            $this->options[$key] = $value;
         }
 
-        return new Basecamps( $this->authToken, $this->accountId, $this->client );
+    }
+
+    public function setOption($name, $value) {
+
+        $this->options[$name] = $value;
+
+    }
+
+    public function __set($name, $value) {
+
+        $this->options[$name] = $value;
+
+    }
+
+    public function __get($name) {
+
+        return $this->options[$name];
+
+    }
+
+    public function user( $authToken = null ) {
+
+        $options = $this->options;
+
+        if ( !is_null($authToken) ) {
+            $options['authToken'] = $authToken;
+        }
+
+        return new User( $options, $this->client );
+
+    }
+
+    public function basecamps( $authToken = null, $accountId = null ) {
+
+        $options = $this->options;
+
+        if ( !is_null($authToken) ) {
+            $options['authToken'] = $authToken;
+        }
+
+        if ( !is_null($accountId) ) {
+            $options['accountId'] = $accountId;
+        }
+
+        return new Basecamps( $options, $this->client );
 
     }
 

@@ -2,7 +2,7 @@
 
 namespace FourteenFour\Basecamp\Contracts;
 
-interface BasecampsContract {
+interface TodosContracts {
 
     public function all( $status );
 

@@ -23,7 +23,7 @@ class BasecampServiceProvider extends ServiceProvider {
 
             $config = $this->getConfig();
 
-            return new Basecamp( $config );
+            return new Basecamp( $config['userAgent'] );
 
         });
 
@@ -33,11 +33,8 @@ class BasecampServiceProvider extends ServiceProvider {
 
 
     private function getConfig() {
-        $config = $this->app['config']->get('basecamp_auth');
 
-        if (filter_var($config['redirectUri'], FILTER_VALIDATE_URL) === FALSE) {
-            $config['redirectUri'] = url($config['redirectUri']);
-        }
+        $config = $this->app['config']->get('basecamp_auth');
 
         return $config;
     }

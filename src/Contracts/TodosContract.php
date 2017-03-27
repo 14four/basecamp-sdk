@@ -2,11 +2,13 @@
 
 namespace FourteenFour\Basecamp\Contracts;
 
-interface BasecampsContract {
+interface TodosContract {
 
-    public function all( $status );
+    public function all();
 
-    public function page( $page, $status );
+    public function page( $page );
+
+    public function completed();
 
     public function archived();
 
@@ -17,6 +19,12 @@ interface BasecampsContract {
     public function create( $data );
 
     public function update( $id, $data );
+
+    public function complete( $id );
+
+    public function uncomplete( $id );
+
+    public function reposition( $id, $position );
 
     public function trash( $id );
 
