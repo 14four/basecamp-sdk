@@ -5,6 +5,7 @@ namespace FourteenFour\Basecamp;
 use FourteenFour\Basecamp\Factories\RequestFactory;
 use FourteenFour\Basecamp\Providers\User;
 use FourteenFour\Basecamp\Providers\Basecamps;
+use FourteenFour\Basecamp\Providers\People;
 use GuzzleHttp\Client;
 
 class Basecamp {
@@ -72,6 +73,26 @@ class Basecamp {
         }
 
         return new Basecamps( $options, $this->client );
+
+    }
+
+    public function people( $authToken = null, $accountId = null, $basecampId = null ) {
+
+        $options = $this->options;
+
+        if ( !is_null($authToken) ) {
+            $options['authToken'] = $authToken;
+        }
+
+        if ( !is_null($accountId) ) {
+            $options['accountId'] = $accountId;
+        }
+
+        if ( !is_null($basecampId) ) {
+            $options['basecamp'] = $basecampId;
+        }
+
+        return new People( $options, $this->client );
 
     }
 
