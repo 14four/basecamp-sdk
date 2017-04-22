@@ -110,11 +110,13 @@ abstract class AbstractApi {
 
     public function request( $method, $path, $params = [] ) {
 
+        $urlParams = '';
+
         if ( $method == 'GET' && count($params) >= 1 ) {
-            $params = $this->getParams( $params );
+            $urlParams = $this->getParams( $params, $path );
         }
 
-        $response = $this->client->request($method, $this->options['accountId'] . $path, [
+        $response = $this->client->request($method, $this->options['accountId'] . $path . $urlParams, [
             'headers' => $this->requestHeaders(),
             'json' => $params,
         ]);
@@ -127,9 +129,9 @@ abstract class AbstractApi {
     }
 
 
-    private function getParams( $params ) {
+    private function getParams( $params, $path ) {
 
-        $getParams = '?';
+        $getParams = strpos('?', $path) ? '?' : '&';
         $first = true;
 
         foreach( $params as $key => $value ) {
