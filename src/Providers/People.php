@@ -72,7 +72,7 @@ class People extends AbstractApi implements BasecampsContract {
 
     public function page( $page = 0, $status = null ) {
 
-        return $this->get( "/people.json?page=$page" );
+        return $this->get( '/projects/' . $this->options['basecamp'] . "/people.json?page=$page" );
 
     }
 
