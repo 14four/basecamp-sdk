@@ -114,10 +114,16 @@ abstract class AbstractApi {
             $params = $this->getParams( $params );
         }
 
-        $response = $this->client->request($method, $this->options['accountId'] . $path, [
-            'headers' => $this->requestHeaders(),
-            'json' => $params,
-        ]);
+        try {
+            $response = $this->client->request($method, $this->options['accountId'] . $path, [
+                'headers' => $this->requestHeaders(),
+                'json' => $params,
+            ]);
+        } catch (\Exception $e) {
+            $response = $e->getResponse();
+            $this->setHeaders( $response );
+            return json_decode( $response->getBody()->getContents() );
+        }
 
         $this->setHeaders( $response );
         $this->checkResponse( $response );
