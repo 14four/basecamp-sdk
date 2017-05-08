@@ -46,6 +46,19 @@ class User extends AbstractApi {
     }
 
     /**
+     * Get User Identity
+     *
+     * @return Object Identity of the user.
+     */
+    public function me() {
+
+        $response = (array)$this->get("/my/profile.json");
+
+        return $response;
+
+    }
+
+    /**
      * Get accounts of the current User
      *
      * @return Array Accounts that user is currently assigned to.
@@ -209,7 +222,7 @@ class User extends AbstractApi {
 
         // TODO require accountid
 
-        return $this->get( "/projects/recordings.json?page=$page" . http_build_query( $params ) );
+        return $this->get( "/projects/recordings.json?page=$page", $params );
 
     }
 
