@@ -2,6 +2,8 @@
 
 namespace FourteenFour\Basecamp\Providers;
 
+use FourteenFour\Basecamp\Exceptions\BasecampError;
+use FourteenFour\Basecamp\Exceptions\RateLimitError;
 use GuzzleHttp\Client;
 
 abstract class AbstractApi {
@@ -122,9 +124,16 @@ abstract class AbstractApi {
                 'json' => $params,
             ]);
         } catch (\Exception $e) {
-            $response = $e->getResponse();
-            $this->setHeaders( $response );
-            return json_decode( $response->getBody()->getContents() );
+            $response = $e->getCode();
+            switch ($e->getCode()) {
+                case 429:
+                    throw new RateLimitError($response, $e->getMessage());
+                    break;
+
+                default:
+                    throw new BasecampError($response, $e->getMessage());
+                    break;
+            }
         }
 
         $this->setHeaders( $response );
